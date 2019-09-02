@@ -1,4 +1,4 @@
-let sprites, idle;
+let sprites, idles;
 function preload() {
   sprites = {
     right: loadImage("assets/player/p1.png"),
@@ -6,22 +6,28 @@ function preload() {
     up: loadImage("assets/player/p3.png"),
     down: loadImage("assets/player/p4.png")
   };
-  idle = loadImage("assets/player/s1.png");
+  idles = {
+    right: loadImage("assets/player/s1.png"),
+    left: loadImage("assets/player/s2.png"),
+    up: loadImage("assets/player/s3.png"),
+    down: loadImage("assets/player/s4.png")
+  };
 }
 
 class Player {
-  constructor(x, y) {
+  constructor(x, y, side) {
     this.position = createVector(x, y);
     this.velocity = createVector(0, 0);
     this.friction = 1;
     this.rotation = 0;
-    this.speed = 4;
-    this.width = 43;
-    this.height = 60;
+    this.speed = 3;
+    this.width = 73.55;
+    this.height = 73.04;
     this.frameWidth = 73.55;
-    this.frameHeight = 87.67;
+    this.frameHeight = 73.04;
+    this.frameSpeed = 8;
     this.sprites = {};
-
+    this.side = side;
     this.initSprites();
   }
 
@@ -33,7 +39,7 @@ class Player {
   draw() {
     noFill();
     strokeWeight(1);
-    stroke(250);
+    noStroke(250);
     return rect(this.position.x, this.position.y, this.width, this.height);
   }
 
@@ -42,30 +48,36 @@ class Player {
       sprites.right,
       this.frameWidth,
       this.frameHeight,
-      9,
-      4
+      this.frameSpeed,
+      3
     );
     this.sprites.left = new PlayerSpriteAnimator(
       sprites.left,
       this.frameWidth,
       this.frameHeight,
-      9,
-      4
+      this.frameSpeed,
+      3
     );
     this.sprites.up = new PlayerSpriteAnimator(
       sprites.up,
       this.frameHeight,
       this.frameWidth,
-      9,
+      this.frameSpeed,
       4
     );
     this.sprites.down = new PlayerSpriteAnimator(
       sprites.down,
       this.frameHeight,
       this.frameWidth,
-      9,
+      this.frameSpeed,
       4
     );
+  }
+
+  updateRun(side) {
+    this.side = side;
+    this.sprites[side].draw(this.position.x, this.position.y);
+    this.sprites[side].update();
   }
 
   run() {
@@ -75,8 +87,8 @@ class Player {
       this.width = this.frameWidth;
       this.height = this.frameHeight;
 
-      this.sprites.left.draw(this.position.x, this.position.y);
-      this.sprites.left.update();
+      this.updateRun("left");
+
       return;
     }
 
@@ -86,8 +98,8 @@ class Player {
       this.width = this.frameWidth;
       this.height = this.frameHeight;
 
-      this.sprites.right.draw(this.position.x, this.position.y);
-      this.sprites.right.update();
+      this.updateRun("right");
+
       return;
     }
 
@@ -97,8 +109,8 @@ class Player {
       this.width = this.frameHeight;
       this.height = this.frameWidth;
 
-      this.sprites.up.draw(this.position.x, this.position.y);
-      this.sprites.up.update();
+      this.updateRun("up");
+
       return;
     }
 
@@ -108,15 +120,19 @@ class Player {
       this.width = this.frameHeight;
       this.height = this.frameWidth;
 
-      this.sprites.down.draw(this.position.x, this.position.y);
-      this.sprites.down.update();
+      this.updateRun("down");
+
       return;
     }
 
-    this.width = 43;
-    this.height = 60;
-
-    image(idle, this.position.x, this.position.y, this.width, this.height);
+    // Draw the current idle position
+    image(
+      idles[this.side],
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
   }
 }
 
@@ -145,7 +161,7 @@ class PlayerSpriteAnimator {
 
     const col = Math.floor(this.currentFrame % this.framesPerRow);
 
-    image(
+    return image(
       this.image,
       x,
       y,
