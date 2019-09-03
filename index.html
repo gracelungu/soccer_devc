@@ -4,27 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="index.css" />
     <title>Document</title>
-    <style>
-        body{
-            display: flex;
-            height: 100vh;
-            justify-content: center;
-            align-items: center;
-            margin:0;
-            padding:0;
-            background-color: #333;
-        }
-    </style>
   </head>
   <body>
-     
+    <section class="overlay" id="overlay">
+      <div class="panel">
+        <div class="instructions">
+
+          Use the <span style="color:#b2612d">Arrow</span> keys to move,
+          <span style="color:#b2612d">A</span> to pass and
+          <span style="color:#b2612d">D</span> to shoot. <br><br>
+
+          Choose your display name <br>
+
+          <input type="text" class="username" placeholder="|">
+
+        </div>
+        <div class="go" id="play" onclick="play()">
+          <span class="play" >PLAY</span>
+        </div>
+      </div>
+    </section>
+
     <script src="./lib/p5.min.js"></script>
     <script src="./lib/p5-collide.min.js"></script>
     <script src="./lib/p5-particle.js"></script>
     <script src="./lib/p5.play.js"></script>
     <script src="./helpers//collisionHelper.js"></script>
+    <script src="./assets/index.js"></script>
     <script src="./bodies/player.js"></script>
+    <script src="./players/index.js"></script>
     <script src="./index.js"></script>
   </body>
 </html>
