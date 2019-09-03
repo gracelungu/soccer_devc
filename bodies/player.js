@@ -1,12 +1,19 @@
 class Player {
+  _bodyX = 15;
+  _bodyY = 15;
+
   constructor(x, y, side, color, handler) {
     this.position = createVector(x, y);
+    this.X = this.position.x + this._bodyX;
+    this.Y = this.position.y + this._bodyY;
     this.velocity = createVector(0, 0);
     this.friction = 1;
     this.rotation = 0;
     this.speed = 3;
     this.width = 73;
     this.height = 73;
+    this.playerBodyWidth = 40;
+    this.playerBodyHeight = 40;
     this.frameWidth = 73;
     this.frameHeight = 73;
     this.frameSpeed = 8;
@@ -23,42 +30,42 @@ class Player {
   }
 
   draw() {
-    fill(0);
+    //noFill(0);
     strokeWeight(1);
     this.displayHandler();
     //noStroke(250);
-    //return rect(this.position.x, this.position.y, this.width, this.height);
+    //return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
   }
 
-  displayHandler(){
+  displayHandler() {
     textSize(15);
     text(this.handler, this.position.x, this.position.y);
   }
 
   initSprites() {
     this.sprites.right = new PlayerSpriteAnimator(
-     playerAssets[this.color].sprites.right,
+      playerAssets[this.color].sprites.right,
       this.frameWidth,
       this.frameHeight,
       this.frameSpeed,
       3
     );
     this.sprites.left = new PlayerSpriteAnimator(
-     playerAssets[this.color].sprites.left,
+      playerAssets[this.color].sprites.left,
       this.frameWidth,
       this.frameHeight,
       this.frameSpeed,
       3
     );
     this.sprites.up = new PlayerSpriteAnimator(
-     playerAssets[this.color].sprites.up,
+      playerAssets[this.color].sprites.up,
       this.frameHeight,
       this.frameWidth,
       this.frameSpeed,
       4
     );
     this.sprites.down = new PlayerSpriteAnimator(
-     playerAssets[this.color].sprites.down,
+      playerAssets[this.color].sprites.down,
       this.frameHeight,
       this.frameWidth,
       this.frameSpeed,
@@ -68,6 +75,10 @@ class Player {
 
   updateRun(side) {
     this.side = side;
+
+    this.X = this.position.x + this._bodyX;
+    this.Y = this.position.y + this._bodyY;
+
     this.sprites[side].draw(this.position.x, this.position.y);
     this.sprites[side].update();
   }

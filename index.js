@@ -8,13 +8,10 @@ function setup() {
   createCanvas(WIDTH, HEIGHT);
 
   field = loadImage(fieldPath);
+
   // Home
   homePlayers = new HomePlayers();
   homePlayers.add('Grace');
-  homePlayers.add('Karl');
-  homePlayers.add('Hadad');
-  homePlayers.add('Vincent');
-  homePlayers.add('Goal');
 }
 
 function initialize() {
@@ -23,8 +20,12 @@ function initialize() {
 }
 
 function draw() {
+  //scale(0.5)
   initialize();
-  textSize(32);
 
   homePlayers.update();
+}
+
+function play(){
+  document.getElementById('overlay').style.display = 'none';
 }
