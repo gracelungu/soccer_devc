@@ -1,8 +1,9 @@
 class Player {
   _bodyX = 15;
   _bodyY = 15;
+  _factor = 15;
 
-  constructor(x, y, side, color, handler) {
+  constructor(x, y, side, color, handler, UID) {
     this.position = createVector(x, y);
     this.X = this.position.x + this._bodyX;
     this.Y = this.position.y + this._bodyY;
@@ -19,13 +20,56 @@ class Player {
     this.frameSpeed = 8;
     this.sprites = {};
     this.side = side;
+    this.state = "idle";
     this.color = color;
     this.handler = handler;
+    this.UID = UID;
+    this.remoteData = {};
+    this.locks = {left:false,up:false,right:false,down:false}
     this.initSprites();
   }
 
+  getRemoteData() {
+    //Get the player position using the UID on firebase as remoteData
+    this.remoteData = {
+      x: 500,
+      y: 200,
+      color: "red",
+      side: "right",
+      state: "run"
+    };
+  }
+
+  isMine() {
+    return UID == this.UID;
+  }
+
+  trackPlayer() {
+    if (this.remoteData.state == "idle") {
+      // Draw the current idle position
+      image(
+        playerAssets[this.remoteData.color].idles[this.remoteData.side],
+        this.remoteData.x,
+        this.remoteData.y,
+        this.width,
+        this.height
+      );
+
+      return;
+    }
+
+    this.position.x = this.remoteData.x;
+    this.position.y = this.remoteData.y;
+
+    this.updateRun(this.remoteData.side);
+  }
+
   update() {
-    this.run();
+    this.getRemoteData();
+
+    if (!this.isMine()) this.trackPlayer();
+    else this.run();
+
     this.draw();
   }
 
@@ -39,7 +83,8 @@ class Player {
 
   displayHandler() {
     textSize(15);
-    text(this.handler, this.position.x, this.position.y);
+    if (this.isMine()) text(this.handler, this.position.x, this.position.y);
+    else text(this.handler, this.remoteData.x, this.remoteData.y);
   }
 
   initSprites() {
@@ -59,15 +104,15 @@ class Player {
     );
     this.sprites.up = new PlayerSpriteAnimator(
       playerAssets[this.color].sprites.up,
-      this.frameHeight,
       this.frameWidth,
+      this.frameHeight,
       this.frameSpeed,
       4
     );
     this.sprites.down = new PlayerSpriteAnimator(
       playerAssets[this.color].sprites.down,
-      this.frameHeight,
       this.frameWidth,
+      this.frameHeight,
       this.frameSpeed,
       4
     );
@@ -83,45 +128,58 @@ class Player {
     this.sprites[side].update();
   }
 
-  run() {
-    if (keyIsDown(LEFT_ARROW) && !collideLeft(this)) {
-      this.position.x -= this.speed;
+  collideTopOf (p) {
+    const collide = collideRectRect(this.X, this.Y, this.width - this._factor, this.height- this._factor, p.X, p.Y, p.width- this._factor, p.height- this._factor);
+    if(collide && this.Y + this.height + 10 >= p.Y && this.Y < p.Y ) return this.locks.down = true;
+    this.locks.down = false;
+  }
 
-      this.width = this.frameWidth;
-      this.height = this.frameHeight;
+  collideBottomOf (p) {
+    const collide = collideRectRect(this.X, this.Y, this.width - this._factor, this.height- this._factor, p.X, p.Y, p.width- this._factor, p.height- this._factor);
+    if(collide && this.Y <= p.Y + p.height - 5 & this.Y > p.Y) return this.locks.up = true;
+    this.locks.up = false;
+  }
+
+  collideRightOf (p) {
+    const collide = collideRectRect(this.X, this.Y, this.width - this._factor, this.height- this._factor, p.X, p.Y, p.width- this._factor, p.height- this._factor);
+    if(collide && this.X + this.width >= p.X && this.X < p.X) return this.locks.right = true;
+    this.locks.right = false;
+  }
+
+  collideLeftOf (p) {
+    const collide = collideRectRect(this.X, this.Y, this.width - this._factor, this.height- this._factor, p.X, p.Y, p.width- this._factor, p.height- this._factor);
+    if(collide && this.X <= p.X + p.width && this.X > p.X ) return this.locks.left = true;
+    this.locks.left = false;
+  }
+
+  run() {
+    if (keyIsDown(LEFT_ARROW) && !collideLeft(this) && !this.locks.left) {
+      this.position.x -= this.speed;
 
       this.updateRun("left");
 
       return;
     }
 
-    if (keyIsDown(RIGHT_ARROW) && !collideRight(this)) {
+    if (keyIsDown(RIGHT_ARROW) && !collideRight(this) && !this.locks.right) {
       this.position.x += this.speed;
-
-      this.width = this.frameWidth;
-      this.height = this.frameHeight;
 
       this.updateRun("right");
 
       return;
     }
 
-    if (keyIsDown(UP_ARROW) && !collideTop(this)) {
+    if (keyIsDown(UP_ARROW) && !collideTop(this) && !this.locks.up) {
       this.position.y -= this.speed;
-
-      this.width = this.frameHeight;
-      this.height = this.frameWidth;
 
       this.updateRun("up");
 
       return;
     }
 
-    if (keyIsDown(DOWN_ARROW) && !collideBottom(this)) {
+    if (keyIsDown(DOWN_ARROW) && !collideBottom(this) && !this.locks.down) {
+    
       this.position.y += this.speed;
-
-      this.width = this.frameHeight;
-      this.height = this.frameWidth;
 
       this.updateRun("down");
 

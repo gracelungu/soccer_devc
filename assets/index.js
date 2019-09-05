@@ -1,5 +1,6 @@
-let playerAssets;
+let playerAssets, ballAsset;
 function preload() {
+  ballAsset = loadImage("assets/ball/ball.png");
   playerAssets = {
     blue: {
       sprites: {
