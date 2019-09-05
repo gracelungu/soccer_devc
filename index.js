@@ -2,6 +2,7 @@ let field;
 let ball;
 let players;
 let homePlayers, away;
+let currentUser;
 const WIDTH = 1400;
 const HEIGHT = 800;
 const fieldPath = "assets/field/field.png";
@@ -18,6 +19,7 @@ async function setup() {
   awayPlayers = new AwayPlayers(ball);
 
   const user = await getUser();
+  currentUser = await getUser();
   UID = user.uid;
 
   players = await getPlayers();
@@ -43,7 +45,7 @@ function draw() {
 
   ball.update();
 
-  setHomeAwayPlayersCollision(homePlayers.players, awayPlayers.players);
+  //setHomeAwayPlayersCollision(homePlayers.players, awayPlayers.players);
 
   if (UID) {
     homePlayers.update();

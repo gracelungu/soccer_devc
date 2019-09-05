@@ -74,19 +74,16 @@ class Player {
   }
 
   async update() {
-    UID = await firebase.auth().currentUser.uid;
-
-    if (UID == null) return;
+  
+    if (currentUser.uid == null) return;
 
     await this.getRemoteData();
-
-    const { uid } = await getUser();
 
     await firebase
       .database()
       .ref("games")
       .child(currentGame)
-      .child(uid)
+      .child(currentUser.uid)
       .on("value", snap => (this.handler = snap.val().username));
 
     if (!this.isMine()) {
@@ -267,7 +264,6 @@ class Player {
 
       return;
     }
-
 
     // Draw the current idle position
     image(

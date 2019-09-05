@@ -22,7 +22,6 @@ async function setUsername(username) {
 }
 
 async function getOrCreateSession() {
-  console.log("UID", await login());
   const games = await firebase
     .database()
     .ref("games")
