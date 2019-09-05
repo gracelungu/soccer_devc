@@ -120,7 +120,7 @@ class Player {
 
   displayHandler() {
     textSize(15);
-    if (this.isMine()) text(this.handler, this.position.x, this.position.y);
+    if (this.isMine()) text(this.remoteData.username || 'none', this.position.x, this.position.y);
     else text(this.handler, this.remoteData.x, this.remoteData.y);
   }
 
