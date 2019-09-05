@@ -38,8 +38,6 @@ class Player {
       .child(currentGame)
       .child(uid)
       .on("value", snap => (this.remoteData = snap.val()));
-
-    //console.log(this.remoteData);
   }
 
   isMine() {
@@ -67,8 +65,8 @@ class Player {
       return;
     }
 
-    this.position.x = this.remoteData.x;
-    this.position.y = this.remoteData.y;
+    this.X = this.remoteData.x;
+    this.Y = this.remoteData.y;
 
     this.updateRun(this.remoteData.side);
   }
@@ -119,7 +117,7 @@ class Player {
     strokeWeight(1);
     this.displayHandler();
     //noStroke(250);
-    //return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
+    return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
   }
 
   displayHandler() {

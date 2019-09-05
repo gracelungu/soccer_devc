@@ -54,7 +54,6 @@ function draw() {
 
 async function play() {
   const username = document.getElementById("username").value;
-  console.log(username);
 
   if (username && username.length > 1) {
     await setUsername(username);
