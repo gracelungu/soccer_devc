@@ -11,27 +11,48 @@
     <section class="overlay" id="overlay">
       <div class="panel">
         <div class="instructions">
-
           Use the <span style="color:#b2612d">Arrow</span> keys to move,
           <span style="color:#b2612d">A</span> to pass and
-          <span style="color:#b2612d">D</span> to shoot. <br><br>
+          <span style="color:#b2612d">D</span> to shoot. <br /><br />
 
-          Choose your display name <br>
+          Choose your display name <br />
 
-          <input type="text" class="username" placeholder="|">
-
+          <input type="text" class="username" id="username" placeholder="|" />
         </div>
         <div class="go" id="play" onclick="play()">
-          <span class="play" >PLAY</span>
+          <span class="play">PLAY</span>
         </div>
       </div>
     </section>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.5.0/firebase-app.js"></script>
+
+    <!-- Add additional services that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase-auth.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyCK4qpD3a_3OPtKpmnRcgFlAcRI_QT3g-M",
+        authDomain: "soccerbook-cb121.firebaseapp.com",
+        databaseURL: "https://soccerbook-cb121.firebaseio.com",
+        projectId: "soccerbook-cb121",
+        storageBucket: "",
+        messagingSenderId: "65831884162",
+        appId: "1:65831884162:web:238a29e0c27bfd6e0fab9b"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
 
     <script src="./lib/p5.min.js"></script>
     <script src="./lib/p5-collide.min.js"></script>
     <script src="./lib/p5-particle.js"></script>
     <script src="./lib/p5.play.js"></script>
     <script src="./helpers//collisionHelper.js"></script>
+    <script src="./Authentication/index.js"></script>
     <script src="./assets/index.js"></script>
     <script src="./bodies/player.js"></script>
     <script src="./bodies/ball.js"></script>

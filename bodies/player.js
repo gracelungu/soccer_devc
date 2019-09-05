@@ -25,26 +25,35 @@ class Player {
     this.handler = handler;
     this.UID = UID;
     this.remoteData = {};
-    this.locks = {left:false,up:false,right:false,down:false}
+    this.locks = { left: false, up: false, right: false, down: false };
     this.initSprites();
   }
 
-  getRemoteData() {
-    //Get the player position using the UID on firebase as remoteData
-    this.remoteData = {
-      x: 500,
-      y: 200,
-      color: "red",
-      side: "right",
-      state: "run"
-    };
+  async getRemoteData() {
+    const { uid } = await getUser();
+
+    await firebase
+      .database()
+      .ref("games")
+      .child(currentGame)
+      .child(uid)
+      .on("value", snap => (this.remoteData = snap.val()));
+
+    //console.log(this.remoteData);
   }
 
   isMine() {
     return UID == this.UID;
   }
 
-  trackPlayer() {
+  async trackPlayer() {
+    await firebase
+      .database()
+      .ref("games")
+      .child(currentGame)
+      .child(uid)
+      .on("value", snap => (this.remoteData = snap.val()));
+
     if (this.remoteData.state == "idle") {
       // Draw the current idle position
       image(
@@ -64,11 +73,27 @@ class Player {
     this.updateRun(this.remoteData.side);
   }
 
-  update() {
-    this.getRemoteData();
+  async update() {
+    UID = await firebase.auth().currentUser.uid;
 
-    if (!this.isMine()) this.trackPlayer();
-    else this.run();
+    if (UID == null) return;
+
+    await this.getRemoteData();
+
+    const { uid } = await getUser();
+
+    await firebase
+      .database()
+      .ref("games")
+      .child(currentGame)
+      .child(uid)
+      .on("value", snap => (this.handler = snap.val().username));
+
+    if (!this.isMine()) {
+      this.trackPlayer();
+    } else {
+      this.run();
+    }
 
     this.draw();
   }
@@ -128,27 +153,67 @@ class Player {
     this.sprites[side].update();
   }
 
-  collideTopOf (p) {
-    const collide = collideRectRect(this.X, this.Y, this.width - this._factor, this.height- this._factor, p.X, p.Y, p.width- this._factor, p.height- this._factor);
-    if(collide && this.Y + this.height + 10 >= p.Y && this.Y < p.Y ) return this.locks.down = true;
+  collideTopOf(p) {
+    const collide = collideRectRect(
+      this.X,
+      this.Y,
+      this.width - this._factor,
+      this.height - this._factor,
+      p.X,
+      p.Y,
+      p.width - this._factor,
+      p.height - this._factor
+    );
+    if (collide && this.Y + this.height + 10 >= p.Y && this.Y < p.Y)
+      return (this.locks.down = true);
     this.locks.down = false;
   }
 
-  collideBottomOf (p) {
-    const collide = collideRectRect(this.X, this.Y, this.width - this._factor, this.height- this._factor, p.X, p.Y, p.width- this._factor, p.height- this._factor);
-    if(collide && this.Y <= p.Y + p.height - 5 & this.Y > p.Y) return this.locks.up = true;
+  collideBottomOf(p) {
+    const collide = collideRectRect(
+      this.X,
+      this.Y,
+      this.width - this._factor,
+      this.height - this._factor,
+      p.X,
+      p.Y,
+      p.width - this._factor,
+      p.height - this._factor
+    );
+    if (collide && (this.Y <= p.Y + p.height - 5) & (this.Y > p.Y))
+      return (this.locks.up = true);
     this.locks.up = false;
   }
 
-  collideRightOf (p) {
-    const collide = collideRectRect(this.X, this.Y, this.width - this._factor, this.height- this._factor, p.X, p.Y, p.width- this._factor, p.height- this._factor);
-    if(collide && this.X + this.width >= p.X && this.X < p.X) return this.locks.right = true;
+  collideRightOf(p) {
+    const collide = collideRectRect(
+      this.X,
+      this.Y,
+      this.width - this._factor,
+      this.height - this._factor,
+      p.X,
+      p.Y,
+      p.width - this._factor,
+      p.height - this._factor
+    );
+    if (collide && this.X + this.width >= p.X && this.X < p.X)
+      return (this.locks.right = true);
     this.locks.right = false;
   }
 
-  collideLeftOf (p) {
-    const collide = collideRectRect(this.X, this.Y, this.width - this._factor, this.height- this._factor, p.X, p.Y, p.width- this._factor, p.height- this._factor);
-    if(collide && this.X <= p.X + p.width && this.X > p.X ) return this.locks.left = true;
+  collideLeftOf(p) {
+    const collide = collideRectRect(
+      this.X,
+      this.Y,
+      this.width - this._factor,
+      this.height - this._factor,
+      p.X,
+      p.Y,
+      p.width - this._factor,
+      p.height - this._factor
+    );
+    if (collide && this.X <= p.X + p.width && this.X > p.X)
+      return (this.locks.left = true);
     this.locks.left = false;
   }
 
@@ -178,7 +243,6 @@ class Player {
     }
 
     if (keyIsDown(DOWN_ARROW) && !collideBottom(this) && !this.locks.down) {
-    
       this.position.y += this.speed;
 
       this.updateRun("down");
