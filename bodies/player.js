@@ -64,9 +64,12 @@ class Player {
 
       return;
     }
+    
 
-    this.X = this.remoteData.x;
-    this.Y = this.remoteData.y;
+    this.X = this.remoteData.X;
+    this.Y = this.remoteData.Y;
+    this.position.x = this.remoteData.x;
+    this.position.y = this.remoteData.y;
 
     this.updateRun(this.remoteData.side);
   }
@@ -88,7 +91,7 @@ class Player {
       .on("value", snap => (this.handler = snap.val().username));
 
     if (!this.isMine()) {
-      await this.trackPlayer();
+       this.trackPlayer();
     } else {
       this.run();
     }
@@ -104,8 +107,10 @@ class Player {
         .child(currentGame)
         .child(this.UID)
         .update({
-          x: this.X,
-          y: this.Y,
+          x: this.position.x,
+          y: this.position.x,
+          X:this.X,
+          Y:this.Y,
           side: this.side,
           state: this.state
         });

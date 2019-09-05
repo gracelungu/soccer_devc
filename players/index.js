@@ -1,6 +1,6 @@
 class HomePlayers {
   constructor(ball) {
-    this.players = []; console.log(ball);
+    this.players = [];
     
     this.ball = ball;
     this.positions = [

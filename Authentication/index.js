@@ -11,14 +11,14 @@ async function getUser() {
   return account.user;
 }
 
-async function setUsername(username){
-    const {uid} = await getUser();
-    await firebase
+async function setUsername(username) {
+  const { uid } = await getUser();
+  await firebase
     .database()
     .ref("games")
     .child(currentGame)
     .child(uid)
-    .update({username});
+    .update({ username });
 }
 
 async function getOrCreateSession() {
@@ -43,6 +43,8 @@ async function getOrCreateSession() {
         uid,
         x: 0,
         y: 0,
+        X: 0,
+        Y: 0,
         color: "blue",
         side: "left",
         state: "idle"
@@ -59,12 +61,12 @@ async function getOrCreateSession() {
         user: { uid }
       } = await login();
 
-      let color = 'blue';
-      let side = 'left';
+      let color = "blue";
+      let side = "left";
 
-      if (Object.keys(games.val()[key]).length > 5){
-        color = 'red';
-        side = 'left';
+      if (Object.keys(games.val()[key]).length > 5) {
+        color = "red";
+        side = "left";
       }
 
       firebase
@@ -77,9 +79,11 @@ async function getOrCreateSession() {
           uid,
           x: 0,
           y: 0,
+          X: 0,
+          Y: 0,
           color,
           side,
-          state:'idle'
+          state: "idle"
         });
 
       currentGame = key;
@@ -93,9 +97,8 @@ async function getOrCreateSession() {
 
 async function getPlayers() {
   const players = await getOrCreateSession();
-  
 
-  if(!players) return false;
+  if (!players) return false;
 
   if (Object.keys(players).length == 1) {
     const key = Object.keys(players)[0];
