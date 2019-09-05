@@ -30,13 +30,12 @@ class Player {
   }
 
   async getRemoteData() {
-    const { uid } = await getUser();
 
     await firebase
       .database()
       .ref("games")
       .child(currentGame)
-      .child(uid)
+      .child(currentUser.uid)
       .on("value", snap => (this.remoteData = snap.val()));
 
     //console.log(this.remoteData);

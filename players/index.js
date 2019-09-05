@@ -13,19 +13,18 @@ class HomePlayers {
   }
 
   update() {
-    for (let player of this.players) {
-      player.update(key);
+    for (let index in this.players) {
+      this.players[index].update(key);
+      this.ball.collideResolve(this.players[index]);
     }
-    for (let i = 0; i < this.players.length; i++) {
-      for (let j = 0; j < this.players.length; j++) {
-        this.players[i].collideTopOf(this.players[j]);
-        this.players[i].collideBottomOf(this.players[j]);
-        this.players[i].collideRightOf(this.players[j]);
-        this.players[i].collideLeftOf(this.players[j]);
-      }
-
-        this.ball.collideResolve(this.players[i]);
-    }
+    // for (let i = 0; i < this.players.length; i++) {
+    //   for (let j = 0; j < this.players.length; j++) {
+    //     this.players[i].collideTopOf(this.players[j]);
+    //     this.players[i].collideBottomOf(this.players[j]);
+    //     this.players[i].collideRightOf(this.players[j]);
+    //     this.players[i].collideLeftOf(this.players[j]);
+    //   }
+    // }
   }
 
   add(handler, UID) {
@@ -34,7 +33,7 @@ class HomePlayers {
     let side = 'right';
     let color = 'blue';
 
-    if(this.position > 0){
+    if(this.position > 5){
       side = 'left';
       color = 'red';
     }

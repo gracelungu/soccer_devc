@@ -75,7 +75,7 @@ class Ball {
       p.width - this._factor,
       p.height - this._factor
     );
-    if (collide) { console.log('COllide');
+    if (collide) {
     
 
         // Shoot
