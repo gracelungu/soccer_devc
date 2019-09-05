@@ -3,7 +3,7 @@ class Player {
   _bodyY = 15;
   _factor = 15;
 
-  constructor(x, y, side, color, handler, UID) { 
+  constructor(x, y, side, color, handler, UID) {
     this.position = createVector(x, y);
     this.X = this.position.x + this._bodyX;
     this.Y = this.position.y + this._bodyY;
@@ -47,7 +47,6 @@ class Player {
   }
 
   async trackPlayer() {
-  
     await firebase
       .database()
       .ref("games")
@@ -91,7 +90,7 @@ class Player {
       .on("value", snap => (this.handler = snap.val().username));
 
     if (!this.isMine()) {
-      this.trackPlayer();
+      await this.trackPlayer();
     } else {
       this.run();
     }
@@ -99,12 +98,28 @@ class Player {
     this.draw();
   }
 
+  async updateRemote() {
+    if (this.isMine()) {
+      await firebase
+        .database()
+        .ref("games")
+        .child(currentGame)
+        .child(this.UID)
+        .update({
+          x: this.X,
+          y: this.Y,
+          side: this.side,
+          state: this.state
+        });
+    }
+  }
+
   draw() {
     //noFill(0);
     strokeWeight(1);
     this.displayHandler();
     //noStroke(250);
-    return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
+    //return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
   }
 
   displayHandler() {
@@ -152,6 +167,8 @@ class Player {
 
     this.sprites[side].draw(this.position.x, this.position.y);
     this.sprites[side].update();
+
+    this.updateRemote();
   }
 
   collideTopOf(p) {
@@ -218,7 +235,7 @@ class Player {
     this.locks.left = false;
   }
 
-  run() {
+  async run() {
     if (keyIsDown(LEFT_ARROW) && !collideLeft(this) && !this.locks.left) {
       this.position.x -= this.speed;
 
@@ -250,6 +267,7 @@ class Player {
 
       return;
     }
+
 
     // Draw the current idle position
     image(
