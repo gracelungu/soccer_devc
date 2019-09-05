@@ -20,16 +20,16 @@ async function setup() {
   const user = await getUser();
   UID = user.uid;
 
-  players = await getPlayers(); 
+  players = await getPlayers();
 
-  if(!players) document.location.reload();
+    firebase
+      .database()
+      .ref("games")
+      .child(currentGame)
+      .on("child_added", player => {
+        homePlayers.add(player.val().username, player.val().uid);
+      });
 
-  for(let key of Object.keys(players)){
-    if(Object.keys(players).length < 5) homePlayers.add(players[key].username, key);
-    if(Object.keys(players).length > 5) awayPlayers.add(players[key].username, key);
-  }
-
-  
 }
 
 function initialize() {
@@ -53,11 +53,11 @@ function draw() {
 }
 
 async function play() {
-  const username = document.getElementById("username").value; console.log(username);
-  
-  if(username && username.length > 1){
+  const username = document.getElementById("username").value;
+  console.log(username);
+
+  if (username && username.length > 1) {
     await setUsername(username);
     document.getElementById("overlay").style.display = "none";
   }
-  
 }
