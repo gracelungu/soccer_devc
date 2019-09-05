@@ -3,7 +3,8 @@ class Player {
   _bodyY = 15;
   _factor = 15;
 
-  constructor(x, y, side, color, handler, UID) {
+  constructor(x, y, side, color, handler, UID) { console.log('>>>>',UID);
+  
   
     this.position = createVector(x, y);
     this.X = this.position.x + this._bodyX;

@@ -29,14 +29,15 @@ class Ball {
   }
 
   async setPosition() {
-    const ball = await firebase
+    firebase
       .database()
       .ref("balls")
       .child(currentGame)
-      .on("child_changed");
-
-    this.X = ball.val().x;
-    this.Y = ball.val().y;
+      .on("child_changed", ball =>{
+        this.X = ball.val().x;
+        this.Y = ball.val().y;
+      });
+   
   }
 
   draw() {

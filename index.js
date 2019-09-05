@@ -27,7 +27,7 @@ async function setup() {
       .database()
       .ref("games")
       .child(currentGame)
-      .on("child_added", player => { 
+      .on("child_added", player => {
         homePlayers.add(player.val().username, player.val().uid);
       });
 
