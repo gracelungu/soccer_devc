@@ -54,6 +54,9 @@ class Player {
       .child(this.UID)
       .on("value", snap => (this.remoteData = snap.val()));
 
+    this.X = this.remoteData.x + this._bodyX;;
+    this.Y = this.remoteData.y + this._bodyY;;
+
     if (this.remoteData.state == "idle") {
       // Draw the current idle position
       image(
@@ -67,14 +70,10 @@ class Player {
       return;
     }
 
-    this.position.x = this.remoteData.x;
-    this.position.y = this.remoteData.y;
-
     this.updateRun(this.remoteData.side);
   }
 
   async update() {
-  
     if (currentUser.uid == null) return;
 
     await this.getRemoteData();
@@ -116,7 +115,7 @@ class Player {
     strokeWeight(1);
     this.displayHandler();
     //noStroke(250);
-    return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
+    //return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
   }
 
   displayHandler() {

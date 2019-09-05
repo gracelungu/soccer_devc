@@ -1,7 +1,7 @@
 let field;
 let ball;
 let players;
-let homePlayers, away;
+let homePlayers;
 let currentUser;
 const WIDTH = 1400;
 const HEIGHT = 800;
@@ -16,7 +16,6 @@ async function setup() {
 
   // Players
   homePlayers = new HomePlayers(ball);
-  awayPlayers = new AwayPlayers(ball);
 
   const user = await getUser();
   currentUser = await getUser();
@@ -49,7 +48,6 @@ function draw() {
 
   if (UID) {
     homePlayers.update();
-    awayPlayers.update();
   }
   //console.log(homePlayers.players.length)
 }
