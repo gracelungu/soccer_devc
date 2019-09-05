@@ -11,7 +11,8 @@ async function getUser() {
   return account.user;
 }
 
-async function setUsername(username) {
+async function setUsername(username) { 
+
   const { uid } = await getUser();
   await firebase
     .database()
@@ -86,6 +87,14 @@ async function getOrCreateSession() {
         });
 
       currentGame = key;
+
+      await firebase
+      .database()
+      .ref('balls')
+      .child(currentGame).set({
+        x:WIDTH/2,
+        y:HEIGHT/2
+      })
 
       return games.val();
     }

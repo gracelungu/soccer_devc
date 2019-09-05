@@ -4,6 +4,7 @@ class Player {
   _factor = 15;
 
   constructor(x, y, side, color, handler, UID) {
+  
     this.position = createVector(x, y);
     this.X = this.position.x + this._bodyX;
     this.Y = this.position.y + this._bodyY;
@@ -51,7 +52,7 @@ class Player {
       .ref("games")
       .child(currentGame)
       .child(this.UID)
-      .on("value", snap => (this.remoteData = snap.val()));
+      .on("child_changed", snap => (this.remoteData = snap.val()));
 
     this.X = this.remoteData.x + this._bodyX;;
     this.Y = this.remoteData.y + this._bodyY;;

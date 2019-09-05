@@ -27,7 +27,7 @@ async function setup() {
       .database()
       .ref("games")
       .child(currentGame)
-      .on("child_added", player => {
+      .on("child_added", player => { 
         homePlayers.add(player.val().username, player.val().uid);
       });
 
@@ -42,7 +42,9 @@ function draw() {
   //scale(0.5)
   initialize();
 
-  ball.update();
+  if(currentGame){
+    ball.update();
+  }
 
   //setHomeAwayPlayersCollision(homePlayers.players, awayPlayers.players);
 
