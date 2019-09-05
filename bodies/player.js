@@ -3,7 +3,7 @@ class Player {
   _bodyY = 15;
   _factor = 15;
 
-  constructor(x, y, side, color, handler, UID) {
+  constructor(x, y, side, color, handler, UID) { 
     this.position = createVector(x, y);
     this.X = this.position.x + this._bodyX;
     this.Y = this.position.y + this._bodyY;
@@ -47,11 +47,12 @@ class Player {
   }
 
   async trackPlayer() {
+  
     await firebase
       .database()
       .ref("games")
       .child(currentGame)
-      .child(uid)
+      .child(this.UID)
       .on("value", snap => (this.remoteData = snap.val()));
 
     if (this.remoteData.state == "idle") {
@@ -103,7 +104,7 @@ class Player {
     strokeWeight(1);
     this.displayHandler();
     //noStroke(250);
-    //return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
+    return rect(this.X, this.Y, this.playerBodyWidth, this.playerBodyHeight);
   }
 
   displayHandler() {

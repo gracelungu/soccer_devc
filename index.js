@@ -20,13 +20,13 @@ async function setup() {
   const user = await getUser();
   UID = user.uid;
 
-  players = await getPlayers();
+  players = await getPlayers(); 
 
   if(!players) document.location.reload();
 
   for(let key of Object.keys(players)){
-    if(Object.keys(players).length < 5) homePlayers.add(players[key].username, players[key].uid);
-    if(Object.keys(players).length > 5) awayPlayers.add(players[key].username, players[key].uid);
+    if(Object.keys(players).length < 5) homePlayers.add(players[key].username, key);
+    if(Object.keys(players).length > 5) awayPlayers.add(players[key].username, key);
   }
 
   
@@ -49,6 +49,7 @@ function draw() {
     homePlayers.update();
     awayPlayers.update();
   }
+  //console.log(homePlayers.players.length)
 }
 
 async function play() {
