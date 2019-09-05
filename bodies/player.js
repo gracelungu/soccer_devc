@@ -53,7 +53,7 @@ class Player {
       .ref("games")
       .child(currentGame)
       .child(this.UID)
-      .on("child_changed", snap => (this.remoteData = snap.val()));
+      .on("value", snap => (this.remoteData = snap.val()));
 
     this.X = this.remoteData.x + this._bodyX;;
     this.Y = this.remoteData.y + this._bodyY;;
@@ -121,8 +121,8 @@ class Player {
 
   displayHandler() {
     textSize(15);
-    if (this.isMine()) text(this.remoteData.username || 'none', this.position.x, this.position.y);
-    else text(this.handler, this.remoteData.x, this.remoteData.y);
+    if (this.isMine()) text(this.handler, this.position.x, this.position.y);
+    else text(this.remoteData.username || 'none', this.remoteData.x, this.remoteData.y);
   }
 
   initSprites() {
@@ -233,7 +233,7 @@ class Player {
   }
 
   async run() {
-    if (keyIsDown(LEFT_ARROW) && !collideLeft(this) && !this.locks.left) {
+    if (keyIsDown(LEFT_ARROW) && !collideLeft(this) && !this.locks.left && this.isMine()) {
       this.position.x -= this.speed;
 
       this.updateRun("left");
